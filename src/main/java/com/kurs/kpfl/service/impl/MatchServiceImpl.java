@@ -3,7 +3,7 @@ package com.kurs.kpfl.service.impl;
 import com.kurs.kpfl.dto.MatchDetailDto;
 import com.kurs.kpfl.dto.MatchListItemDto;
 import com.kurs.kpfl.exception.NotFoundException;
-import com.kurs.kpfl.model.entity.Match;
+import com.kurs.kpfl.entity.Match;
 import com.kurs.kpfl.repository.MatchRepository;
 import com.kurs.kpfl.service.ClubService;
 import com.kurs.kpfl.service.MatchService;

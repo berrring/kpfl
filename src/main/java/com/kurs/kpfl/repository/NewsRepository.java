@@ -1,6 +1,6 @@
 package com.kurs.kpfl.repository;
 
-import com.kurs.kpfl.model.entity.News;
+import com.kurs.kpfl.entity.News;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

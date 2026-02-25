@@ -1,4 +1,4 @@
-package com.kurs.kpfl.model.entity;
+package com.kurs.kpfl.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

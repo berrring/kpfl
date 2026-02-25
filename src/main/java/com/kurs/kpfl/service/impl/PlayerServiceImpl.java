@@ -3,7 +3,7 @@ package com.kurs.kpfl.service.impl;
 import com.kurs.kpfl.dto.PlayerDetailDto;
 import com.kurs.kpfl.dto.PlayerListItemDto;
 import com.kurs.kpfl.exception.NotFoundException;
-import com.kurs.kpfl.model.entity.Player;
+import com.kurs.kpfl.entity.Player;
 import com.kurs.kpfl.repository.PlayerRepository;
 import com.kurs.kpfl.service.ClubService;
 import com.kurs.kpfl.service.PlayerService;

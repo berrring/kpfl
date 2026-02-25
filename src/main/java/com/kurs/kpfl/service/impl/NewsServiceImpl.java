@@ -3,7 +3,7 @@ package com.kurs.kpfl.service.impl;
 import com.kurs.kpfl.dto.NewsDetailDto;
 import com.kurs.kpfl.dto.NewsListItemDto;
 import com.kurs.kpfl.exception.NotFoundException;
-import com.kurs.kpfl.model.entity.News;
+import com.kurs.kpfl.entity.News;
 import com.kurs.kpfl.repository.NewsRepository;
 import com.kurs.kpfl.service.ClubService;
 import com.kurs.kpfl.service.NewsService;

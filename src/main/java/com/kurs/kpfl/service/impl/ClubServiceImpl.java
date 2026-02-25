@@ -4,7 +4,7 @@ import com.kurs.kpfl.dto.ClubDetailDto;
 import com.kurs.kpfl.dto.ClubListItemDto;
 import com.kurs.kpfl.dto.PlayerListItemDto;
 import com.kurs.kpfl.exception.NotFoundException;
-import com.kurs.kpfl.model.entity.Club;
+import com.kurs.kpfl.entity.Club;
 import com.kurs.kpfl.repository.ClubRepository;
 import com.kurs.kpfl.service.ClubService;
 import lombok.RequiredArgsConstructor;
