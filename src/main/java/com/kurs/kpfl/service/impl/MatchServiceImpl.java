@@ -4,6 +4,7 @@ import com.kurs.kpfl.dto.MatchDetailDto;
 import com.kurs.kpfl.dto.MatchListItemDto;
 import com.kurs.kpfl.exception.NotFoundException;
 import com.kurs.kpfl.entity.Match;
+import com.kurs.kpfl.model.MatchStatus;
 import com.kurs.kpfl.repository.MatchRepository;
 import com.kurs.kpfl.service.ClubService;
 import com.kurs.kpfl.service.MatchService;
@@ -26,11 +27,19 @@ public class MatchServiceImpl implements MatchService {
     private final ClubService clubService;
 
     @Override
-    public List<MatchListItemDto> getMatches(Integer seasonYear, Integer round, Long clubId, LocalDate dateFrom, LocalDate dateTo) {
+    public List<MatchListItemDto> getMatches(
+            Integer seasonYear,
+            Integer round,
+            Long clubId,
+            LocalDate dateFrom,
+            LocalDate dateTo,
+            MatchStatus status
+    ) {
         Specification<Match> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
-            if (seasonYear != null) predicates.add(cb.equal(root.get("seasonYear"), seasonYear));
+            if (seasonYear != null) predicates.add(cb.equal(root.get("season").get("year"), seasonYear));
             if (round != null) predicates.add(cb.equal(root.get("round"), round));
+            if (status != null) predicates.add(cb.equal(root.get("status"), status));
             if (clubId != null) {
                 predicates.add(cb.or(
                         cb.equal(root.get("homeClub").get("id"), clubId),
@@ -53,17 +62,20 @@ public class MatchServiceImpl implements MatchService {
                 .orElseThrow(() -> new NotFoundException("Match not found with id " + id));
 
         return new MatchDetailDto(
-                match.getId(), match.getDateTime(), match.getStatus(),
+                match.getId(),
+                match.getDateTime(),
+                match.getStatus() == null ? null : match.getStatus().name(),
                 clubService.mapToListDto(match.getHomeClub()),
                 clubService.mapToListDto(match.getAwayClub()),
                 formatScore(match), match.getStadium(), match.getRound(),
-                match.getSeasonYear(), Collections.emptyList()
+                match.getSeason() == null ? null : match.getSeason().getYear(),
+                Collections.emptyList()
         );
     }
 
     private MatchListItemDto mapToListDto(Match match) {
         return new MatchListItemDto(
-                match.getId(), match.getDateTime(), match.getStatus(),
+                match.getId(), match.getDateTime(), match.getStatus() == null ? null : match.getStatus().name(),
                 clubService.mapToListDto(match.getHomeClub()),
                 clubService.mapToListDto(match.getAwayClub()),
                 formatScore(match)

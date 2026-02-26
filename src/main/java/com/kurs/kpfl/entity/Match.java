@@ -1,7 +1,9 @@
 package com.kurs.kpfl.entity;
 
+import com.kurs.kpfl.model.MatchStatus;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,8 +17,13 @@ public class Match {
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
-    @Column(nullable = false, length = 30)
-    private String status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "season_id", nullable = false)
+    private Season season;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private MatchStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "home_club_id", nullable = false)
@@ -38,7 +45,6 @@ public class Match {
     @Column(name = "round_number")
     private Integer round;
 
-
-    @Column(name = "season_year")
-    private Integer seasonYear;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 }

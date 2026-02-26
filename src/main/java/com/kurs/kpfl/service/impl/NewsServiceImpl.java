@@ -28,7 +28,12 @@ public class NewsServiceImpl implements NewsService {
         if (limit < 1 || limit > 50) throw new IllegalArgumentException("Limit must be between 1 and 50");
         return newsRepository.findAllByOrderByPublishedAtDesc(PageRequest.of(0, limit))
                 .stream()
-                .map(n -> new NewsListItemDto(n.getId(), n.getTitle(), n.getTag(), n.getPublishedAt()))
+                .map(n -> new NewsListItemDto(
+                        n.getId(),
+                        n.getTitle(),
+                        n.getTag() == null ? null : n.getTag().name(),
+                        n.getPublishedAt()
+                ))
                 .toList();
     }
 
@@ -38,9 +43,13 @@ public class NewsServiceImpl implements NewsService {
                 .orElseThrow(() -> new NotFoundException("News not found with id " + id));
 
         return new NewsDetailDto(
-                news.getId(), news.getTitle(), news.getTag(), news.getPublishedAt(), news.getShortText(),
-                clubService.mapToListDto(news.getRelatedClub()),
-                playerService.mapToListDto(news.getRelatedPlayer())
+                news.getId(),
+                news.getTitle(),
+                news.getTag() == null ? null : news.getTag().name(),
+                news.getPublishedAt(),
+                news.getShortText(),
+                clubService.mapToListDto(news.getClub()),
+                playerService.mapToListDto(news.getPlayer())
         );
     }
 }

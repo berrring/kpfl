@@ -1,7 +1,9 @@
 package com.kurs.kpfl.entity;
 
+import com.kurs.kpfl.model.NewsTag;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,20 +17,24 @@ public class News {
     @Column(nullable = false)
     private String title;
 
-    @Column(length = 50)
-    private String tag;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20, nullable = false)
+    private NewsTag tag;
 
     @Column(name = "published_at", nullable = false)
     private LocalDateTime publishedAt;
 
-    @Column(name = "short_text", columnDefinition = "TEXT")
+    @Column(name = "short_text", length = 500)
     private String shortText;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "related_club_id")
-    private Club relatedClub;
+    @JoinColumn(name = "club_id")
+    private Club club;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "related_player_id")
-    private Player relatedPlayer;
+    @JoinColumn(name = "player_id")
+    private Player player;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 }

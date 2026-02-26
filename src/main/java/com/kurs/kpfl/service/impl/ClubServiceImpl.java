@@ -32,12 +32,19 @@ public class ClubServiceImpl implements ClubService {
                 .orElseThrow(() -> new NotFoundException("Club not found with id " + id));
 
         List<PlayerListItemDto> players = club.getPlayers().stream()
-                .map(p -> new PlayerListItemDto(p.getId(), p.getFirstName(), p.getLastName(), p.getJerseyNumber(), p.getPosition()))
+                .map(p -> new PlayerListItemDto(
+                        p.getId(),
+                        p.getFirstName(),
+                        p.getLastName(),
+                        p.getJerseyNumber(),
+                        p.getPosition() == null ? null : p.getPosition().name()
+                ))
                 .toList();
 
         return new ClubDetailDto(
                 club.getId(), club.getName(), club.getAbbr(), club.getCity(),
-                club.getLogoUrl(), club.getStadium(), club.getFoundedYear(), players
+                club.getLogoUrl(), club.getPrimaryColor(), club.getStadium(), club.getFoundedYear(),
+                club.getCoachName(), club.getCoachInfo(), players
         );
     }
 

@@ -25,8 +25,9 @@ public class PlayerServiceImpl implements PlayerService {
 
         return new PlayerDetailDto(
                 player.getId(), player.getFirstName(), player.getLastName(),
-                player.getJerseyNumber(), player.getPosition(), player.getBirthDate(),
+                player.getJerseyNumber(), player.getPosition() == null ? null : player.getPosition().name(), player.getBirthDate(),
                 player.getNationality(), player.getHeightCm(), player.getWeightKg(),
+                player.getAgeYears(), player.getMarketValueEur(), player.getSourceUrl(), player.getSourceNote(),
                 clubService.mapToListDto(player.getClub())
         );
     }
@@ -34,6 +35,12 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public PlayerListItemDto mapToListDto(Player player) {
         if (player == null) return null;
-        return new PlayerListItemDto(player.getId(), player.getFirstName(), player.getLastName(), player.getJerseyNumber(), player.getPosition());
+        return new PlayerListItemDto(
+                player.getId(),
+                player.getFirstName(),
+                player.getLastName(),
+                player.getJerseyNumber(),
+                player.getPosition() == null ? null : player.getPosition().name()
+        );
     }
 }
