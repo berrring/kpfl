@@ -19,7 +19,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/admin/**").authenticated()
+                        .requestMatchers("/admin/**").authenticated()git
                         .anyRequest().authenticated()
                 );
 
