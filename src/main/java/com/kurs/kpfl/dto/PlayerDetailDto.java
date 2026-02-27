@@ -12,6 +12,7 @@ public record PlayerDetailDto(
         Integer weightKg,
         Integer ageYears,
         Long marketValueEur,
+        String photoUrl,
         String sourceUrl,
         String sourceNote,
         ClubListItemDto club

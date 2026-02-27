@@ -147,7 +147,12 @@ Authorization: Bearer <jwt>
 
 #### Players
 
+- `GET /api/players` - players list (optional `clubId`)
 - `GET /api/players/{id}` - player details
+
+#### Seasons
+
+- `GET /api/seasons` - seasons list
 
 #### Matches
 
@@ -168,6 +173,17 @@ Authorization: Bearer <jwt>
 
 - `GET /api/news?limit=20` - news list (`limit` from 1 to 50)
 - `GET /api/news/{id}` - news details
+
+#### Historical Archive
+
+- `GET /api/history/champions` - champions history (`fromYear`, `toYear` optional)
+- `GET /api/history/champions/{seasonYear}` - champion row for season
+- `GET /api/history/club-honours` - all-time club honours
+- `GET /api/history/standings?seasonYear=2025` - archived standings table
+- `GET /api/history/standings/seasons` - available standings years
+- `GET /api/history/records` - league records
+- `GET /api/history/top-scorers` - all-time top scorers
+- `GET /api/history/top-appearances` - all-time top appearances
 
 ### Admin API (`/admin/**`, ADMIN only)
 

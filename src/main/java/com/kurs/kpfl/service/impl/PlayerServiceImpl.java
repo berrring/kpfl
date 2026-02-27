@@ -11,12 +11,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
     private final ClubService clubService;
+
+    @Override
+    public List<PlayerListItemDto> getPlayers(Long clubId) {
+        List<Player> players = clubId == null
+                ? playerRepository.findAllByOrderByLastNameAscFirstNameAsc()
+                : playerRepository.findByClubIdOrderByLastNameAscFirstNameAsc(clubId);
+
+        return players.stream()
+                .map(this::mapToListDto)
+                .toList();
+    }
 
     @Override
     public PlayerDetailDto getPlayerDetail(Long id) {
@@ -27,7 +40,7 @@ public class PlayerServiceImpl implements PlayerService {
                 player.getId(), player.getFirstName(), player.getLastName(),
                 player.getJerseyNumber(), player.getPosition() == null ? null : player.getPosition().name(), player.getBirthDate(),
                 player.getNationality(), player.getHeightCm(), player.getWeightKg(),
-                player.getAgeYears(), player.getMarketValueEur(), player.getSourceUrl(), player.getSourceNote(),
+                player.getAgeYears(), player.getMarketValueEur(), player.getPhotoUrl(), player.getSourceUrl(), player.getSourceNote(),
                 clubService.mapToListDto(player.getClub())
         );
     }

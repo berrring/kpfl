@@ -65,6 +65,19 @@ class EndpointSmokeTest {
         HttpResponse<String> playerById = send("GET", "/api/players/" + player.getId(), null, null);
         assertThat(playerById.statusCode()).isEqualTo(200);
         assertThat(readId(playerById.body())).isEqualTo(player.getId());
+        assertThat(objectMapper.readTree(playerById.body()).has("photoUrl")).isTrue();
+
+        HttpResponse<String> players = send("GET", "/api/players", null, null);
+        assertThat(players.statusCode()).isEqualTo(200);
+        assertThat(objectMapper.readTree(players.body()).isArray()).isTrue();
+
+        HttpResponse<String> playersByClub = send("GET", "/api/players?clubId=" + club.getId(), null, null);
+        assertThat(playersByClub.statusCode()).isEqualTo(200);
+        assertThat(objectMapper.readTree(playersByClub.body()).isArray()).isTrue();
+
+        HttpResponse<String> seasons = send("GET", "/api/seasons", null, null);
+        assertThat(seasons.statusCode()).isEqualTo(200);
+        assertThat(objectMapper.readTree(seasons.body()).isArray()).isTrue();
 
         HttpResponse<String> matchesFiltered = send("GET", "/api/matches?seasonYear=2026&round=1&status=FINISHED", null, null);
         assertThat(matchesFiltered.statusCode()).isEqualTo(200);
@@ -85,6 +98,38 @@ class EndpointSmokeTest {
         HttpResponse<String> newsById = send("GET", "/api/news/" + news.getId(), null, null);
         assertThat(newsById.statusCode()).isEqualTo(200);
         assertThat(readId(newsById.body())).isEqualTo(news.getId());
+
+        HttpResponse<String> champions = send("GET", "/api/history/champions", null, null);
+        assertThat(champions.statusCode()).isEqualTo(200);
+        assertThat(objectMapper.readTree(champions.body()).isArray()).isTrue();
+
+        HttpResponse<String> champion2025 = send("GET", "/api/history/champions/2025", null, null);
+        assertThat(champion2025.statusCode()).isEqualTo(200);
+        assertThat(objectMapper.readTree(champion2025.body()).path("seasonYear").asInt()).isEqualTo(2025);
+
+        HttpResponse<String> honours = send("GET", "/api/history/club-honours", null, null);
+        assertThat(honours.statusCode()).isEqualTo(200);
+        assertThat(objectMapper.readTree(honours.body()).isArray()).isTrue();
+
+        HttpResponse<String> archivedStandings = send("GET", "/api/history/standings?seasonYear=2025", null, null);
+        assertThat(archivedStandings.statusCode()).isEqualTo(200);
+        assertThat(objectMapper.readTree(archivedStandings.body()).isArray()).isTrue();
+
+        HttpResponse<String> archivedSeasons = send("GET", "/api/history/standings/seasons", null, null);
+        assertThat(archivedSeasons.statusCode()).isEqualTo(200);
+        assertThat(objectMapper.readTree(archivedSeasons.body()).isArray()).isTrue();
+
+        HttpResponse<String> records = send("GET", "/api/history/records", null, null);
+        assertThat(records.statusCode()).isEqualTo(200);
+        assertThat(objectMapper.readTree(records.body()).isArray()).isTrue();
+
+        HttpResponse<String> topScorers = send("GET", "/api/history/top-scorers", null, null);
+        assertThat(topScorers.statusCode()).isEqualTo(200);
+        assertThat(objectMapper.readTree(topScorers.body()).isArray()).isTrue();
+
+        HttpResponse<String> topAppearances = send("GET", "/api/history/top-appearances", null, null);
+        assertThat(topAppearances.statusCode()).isEqualTo(200);
+        assertThat(objectMapper.readTree(topAppearances.body()).isArray()).isTrue();
     }
 
     @Test
