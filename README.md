@@ -243,6 +243,7 @@ Migration files are in `src/main/resources/db/migration`:
 - `V2__indexes.sql` - seed data
 - `V3__indexes.sql` - indexes
 - `V4__real_kpfl_seed.sql` - extended real KPFL dataset (16 clubs + player rosters)
+- `V5__kpfl_historical_archive.sql` - KPFL historical archive (champions 1992-2025, club honours, 2025 table, records, all-time leaderboards)
 
 ## Tests
 
