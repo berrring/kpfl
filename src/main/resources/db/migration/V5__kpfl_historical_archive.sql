@@ -1,5 +1,5 @@
 CREATE TABLE kpfl_champion_history (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     season_year INT NOT NULL,
     champion VARCHAR(120) NOT NULL,
     champion_title_no INT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE kpfl_champion_history (
 );
 
 CREATE TABLE kpfl_club_honours (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     club_name VARCHAR(120) NOT NULL,
     titles INT NOT NULL DEFAULT 0,
     runner_up_count INT NOT NULL DEFAULT 0,
@@ -24,7 +24,7 @@ CREATE TABLE kpfl_club_honours (
 );
 
 CREATE TABLE kpfl_season_standings_archive (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     season_year INT NOT NULL,
     place_no INT NOT NULL,
     club_name VARCHAR(120) NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE kpfl_season_standings_archive (
 );
 
 CREATE TABLE kpfl_league_records (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     record_key VARCHAR(120) NOT NULL,
     record_value VARCHAR(500) NOT NULL,
     source_note VARCHAR(255) NULL,
@@ -49,7 +49,7 @@ CREATE TABLE kpfl_league_records (
 );
 
 CREATE TABLE kpfl_top_scorers_all_time (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     rank_no INT NOT NULL,
     player_name VARCHAR(120) NOT NULL,
     position_name VARCHAR(60) NULL,
@@ -61,7 +61,7 @@ CREATE TABLE kpfl_top_scorers_all_time (
 );
 
 CREATE TABLE kpfl_top_appearances_all_time (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     rank_no INT NOT NULL,
     player_name VARCHAR(120) NOT NULL,
     position_name VARCHAR(60) NULL,

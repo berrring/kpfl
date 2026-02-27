@@ -3,6 +3,7 @@ package com.kurs.kpfl.service;
 import com.kurs.kpfl.dto.AuthResponse;
 import com.kurs.kpfl.dto.LoginRequest;
 import com.kurs.kpfl.dto.RegisterRequest;
+import com.kurs.kpfl.exception.ConflictException;
 import com.kurs.kpfl.model.Role;
 import com.kurs.kpfl.entity.User;
 import com.kurs.kpfl.repository.UserRepository;
@@ -29,7 +30,7 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         if (repository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("User already exists with email " + request.getEmail());
+            throw new ConflictException("User with this email already exists.");
         }
 
         var user = User.builder()

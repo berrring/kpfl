@@ -7,7 +7,7 @@ Backend for the KPFL platform (iOS app + Admin client) built with Spring Boot.
 - Java 21
 - Spring Boot 4 (WebMVC, Data JPA, Security, Validation)
 - JWT (access token)
-- MySQL 8
+- PostgreSQL 16
 - Flyway migrations
 - Springdoc OpenAPI (Swagger UI)
 - Lombok
@@ -24,23 +24,23 @@ Backend for the KPFL platform (iOS app + Admin client) built with Spring Boot.
 ### 1) Requirements
 
 - JDK 21
-- MySQL (local or Docker)
+- PostgreSQL (local or Docker)
 
 ### 2) Configuration
 
 Defaults are in `src/main/resources/application.yml`:
 
-- DB URL: `jdbc:mysql://localhost:3307/kpfl?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC`
-- DB user/password: `root/root`
+- DB URL: `jdbc:postgresql://localhost:5432/kpfl`
+- DB user/password: `postgres/postgres`
 - Port: `8080`
 - JWT:
   - `JWT_SECRET` (base64)
   - `JWT_ACCESS_EXPIRATION_MS` (default: `86400000`)
 
-### 3) Start MySQL (Docker example)
+### 3) Start PostgreSQL (Docker example)
 
 ```bash
-docker run --name kpfl-mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=kpfl -p 3307:3306 -d mysql:8.0
+docker run --name kpfl-postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=kpfl -p 5432:5432 -d postgres:16
 ```
 
 ### 4) Run backend

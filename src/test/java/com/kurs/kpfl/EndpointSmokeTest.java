@@ -120,7 +120,57 @@ class EndpointSmokeTest {
                   "city": "Bishkek"
                 }
                 """, null);
-        assertThat(unauthorized.statusCode()).isIn(401, 403);
+        assertThat(unauthorized.statusCode()).isEqualTo(401);
+        assertThat(readMessage(unauthorized.body())).isEqualTo("Authentication is required.");
+    }
+
+    @Test
+    void errorResponses_shouldReturnReadableMessages() throws Exception {
+        HttpResponse<String> invalidEnum = send("GET", "/api/matches?status=WRONG_STATUS", null, null);
+        assertThat(invalidEnum.statusCode()).isEqualTo(400);
+        assertThat(readMessage(invalidEnum.body())).contains("Allowed values");
+
+        HttpResponse<String> invalidLimit = send("GET", "/api/news?limit=0", null, null);
+        assertThat(invalidLimit.statusCode()).isEqualTo(400);
+        assertThat(readMessage(invalidLimit.body())).contains("Validation failed");
+
+        HttpResponse<String> brokenJson = send("POST", "/auth/login", """
+                {"email":"admin@kpfl.local","password":"admin"
+                """, null);
+        assertThat(brokenJson.statusCode()).isEqualTo(400);
+        assertThat(readMessage(brokenJson.body())).isEqualTo("Invalid request body. Ensure JSON is valid and field types are correct.");
+
+        String userSuffix = String.valueOf(System.currentTimeMillis());
+        HttpResponse<String> userRegister = send("POST", "/auth/register", """
+                {
+                  "email": "normal%s@kpfl.local",
+                  "password": "secret123",
+                  "displayName": "Regular User %s"
+                }
+                """.formatted(userSuffix, userSuffix), null);
+        assertThat(userRegister.statusCode()).isEqualTo(200);
+        String userToken = readToken(userRegister.body());
+
+        HttpResponse<String> forbidden = send("POST", "/admin/clubs", """
+                {
+                  "name": "Forbidden Club %s",
+                  "abbr": "FC%s",
+                  "city": "Bishkek"
+                }
+                """.formatted(userSuffix, userSuffix.substring(Math.max(0, userSuffix.length() - 2))), userToken);
+        assertThat(forbidden.statusCode()).isEqualTo(403);
+        assertThat(readMessage(forbidden.body())).isEqualTo("Access denied. You do not have permission to perform this operation.");
+
+        String adminToken = adminToken();
+        HttpResponse<String> duplicateClub = send("POST", "/admin/clubs", """
+                {
+                  "name": "Duplicate Club",
+                  "abbr": "DOR",
+                  "city": "Bishkek"
+                }
+                """, adminToken);
+        assertThat(duplicateClub.statusCode()).isEqualTo(409);
+        assertThat(readMessage(duplicateClub.body())).isEqualTo("Club with this abbreviation already exists.");
     }
 
     @Test
@@ -281,6 +331,11 @@ class EndpointSmokeTest {
     private String readToken(String body) throws Exception {
         JsonNode root = objectMapper.readTree(body);
         return root.path("token").asText();
+    }
+
+    private String readMessage(String body) throws Exception {
+        JsonNode root = objectMapper.readTree(body);
+        return root.path("message").asText();
     }
 
     private long readId(String body) throws Exception {

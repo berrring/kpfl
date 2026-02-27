@@ -28,6 +28,9 @@ INSERT INTO clubs (
 (15, 'Kyrgyzaltyn Kara-Balta', 'KKB', 'Kara-Balta', NULL, NULL, NULL, NULL, 'Bakay Zayyrbekov', 'Kyrgyzstan, appointed Dec 2025', NOW()),
 (16, 'Asia Talas', 'ATL', 'Talas', NULL, NULL, NULL, NULL, 'Maksim Shatskikh', 'Uzbekistan, appointed Nov 2025', NOW());
 
+SELECT setval(pg_get_serial_sequence('seasons', 'id'), COALESCE((SELECT MAX(id) FROM seasons), 1), TRUE);
+SELECT setval(pg_get_serial_sequence('clubs', 'id'), COALESCE((SELECT MAX(id) FROM clubs), 1), TRUE);
+
 CREATE TEMPORARY TABLE tmp_player_seed (
     club_abbr VARCHAR(10) NOT NULL,
     position VARCHAR(10) NOT NULL,
@@ -182,10 +185,10 @@ INSERT INTO players (
 )
 SELECT
     c.id,
-    SUBSTRING_INDEX(t.full_name, ' ', 1),
+    split_part(t.full_name, ' ', 1),
     CASE
-        WHEN LOCATE(' ', t.full_name) = 0 THEN 'Unknown'
-        ELSE TRIM(SUBSTRING(t.full_name, LOCATE(' ', t.full_name) + 1))
+        WHEN POSITION(' ' IN t.full_name) = 0 THEN 'Unknown'
+        ELSE TRIM(SUBSTRING(t.full_name FROM POSITION(' ' IN t.full_name) + 1))
     END,
     NULL,
     t.position,
@@ -202,7 +205,7 @@ SELECT
 FROM tmp_player_seed t
 JOIN clubs c ON c.abbr = t.club_abbr;
 
-DROP TEMPORARY TABLE tmp_player_seed;
+DROP TABLE IF EXISTS tmp_player_seed;
 
 INSERT INTO matches (
     season_id, round_number, date_time, stadium, home_club_id, away_club_id,
