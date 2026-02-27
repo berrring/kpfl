@@ -88,6 +88,17 @@ class EndpointSmokeTest {
     }
 
     @Test
+    void swaggerEndpoints_shouldBeAvailable() throws Exception {
+        HttpResponse<String> apiDocs = send("GET", "/v3/api-docs", null, null);
+        assertThat(apiDocs.statusCode()).isEqualTo(200);
+        assertThat(apiDocs.body()).contains("\"openapi\"");
+
+        HttpResponse<String> swaggerUi = send("GET", "/swagger-ui/index.html", null, null);
+        assertThat(swaggerUi.statusCode()).isEqualTo(200);
+        assertThat(swaggerUi.body()).contains("Swagger UI");
+    }
+
+    @Test
     void authEndpoints_shouldWorkForRegisterAndLogin() throws Exception {
         String suffix = String.valueOf(System.currentTimeMillis());
 

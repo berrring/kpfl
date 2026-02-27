@@ -24,18 +24,21 @@ Backend for the KPFL platform (iOS app + Admin client) built with Spring Boot.
 ### 1) Requirements
 
 - JDK 21
-- PostgreSQL (local or Docker)
+- PostgreSQL (local, Docker, or cloud)
+- Docker (optional, if you run in container)
 
-### 2) Configuration
+### 2) Environment Variables
 
-Defaults are in `src/main/resources/application.yml`:
+Main runtime variables:
 
-- DB URL: `jdbc:postgresql://localhost:5432/kpfl`
-- DB user/password: `postgres/postgres`
-- Port: `8080`
-- JWT:
-  - `JWT_SECRET` (base64)
-  - `JWT_ACCESS_EXPIRATION_MS` (default: `86400000`)
+- `SPRING_DATASOURCE_URL` (default: `jdbc:postgresql://localhost:5432/kpfl`)
+- `SPRING_DATASOURCE_USERNAME` (default: `postgres`)
+- `SPRING_DATASOURCE_PASSWORD` (default: `postgres`)
+- `PORT` (default: `8080`, Render sets it automatically)
+- `JWT_SECRET` (base64 secret for signing JWT)
+- `JWT_ACCESS_EXPIRATION_MS` (default: `86400000`)
+
+Template file with defaults is available at `.env.example`.
 
 ### 3) Start PostgreSQL (Docker example)
 
@@ -60,6 +63,44 @@ Linux/macOS:
 ```
 
 Flyway migrations are applied automatically on startup.
+
+### 5) Run backend in Docker (local)
+
+```bash
+docker build -t kpfl-backend .
+docker run --name kpfl-backend -p 8080:8080 -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/kpfl -e SPRING_DATASOURCE_USERNAME=postgres -e SPRING_DATASOURCE_PASSWORD=postgres -e JWT_SECRET=<BASE64_SECRET> -d kpfl-backend
+```
+
+## Deploy to Render (Docker Web Service)
+
+### 1) Create Web Service
+
+- Render Dashboard -> `New +` -> `Web Service`
+- Connect repository
+- Environment: `Docker`
+- Render will use `Dockerfile` from project root
+
+### 2) Set health check
+
+- Health Check Path: `/actuator/health`
+
+### 3) Configure variables in Render
+
+Required:
+
+- `SPRING_DATASOURCE_URL` = `jdbc:postgresql://<render-db-host>:5432/<db_name>`
+- `SPRING_DATASOURCE_USERNAME` = `<render_db_user>`
+- `SPRING_DATASOURCE_PASSWORD` = `<render_db_password>`
+- `JWT_SECRET` = `<base64_secret>`
+
+Optional:
+
+- `JWT_ACCESS_EXPIRATION_MS` = `86400000`
+- `JAVA_OPTS` = `-Xms256m -Xmx512m`
+
+If you use external Render DB URL, append SSL mode in URL:
+
+- `jdbc:postgresql://<host>:5432/<db>?sslmode=require`
 
 ## Swagger
 
