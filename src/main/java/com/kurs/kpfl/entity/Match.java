@@ -45,6 +45,12 @@ public class Match {
     @Column(name = "round_number")
     private Integer round;
 
+    @Column(name = "external_source", length = 40)
+    private String externalSource;
+
+    @Column(name = "external_id", length = 64)
+    private String externalId;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 }

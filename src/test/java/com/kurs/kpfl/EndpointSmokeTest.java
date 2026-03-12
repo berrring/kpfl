@@ -26,7 +26,10 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Import(TestcontainersConfiguration.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "thesportsdb.enabled=false"
+)
 class EndpointSmokeTest {
 
     @Autowired
@@ -178,6 +181,24 @@ class EndpointSmokeTest {
                 """, null);
         assertThat(unauthorized.statusCode()).isEqualTo(401);
         assertThat(readMessage(unauthorized.body())).isEqualTo("Authentication is required.");
+    }
+
+    @Test
+    void adminImportEndpoint_shouldRequireAdminAndReturnSummary() throws Exception {
+        HttpResponse<String> unauthorized = send("POST", "/admin/import/thesportsdb", null, null);
+        assertThat(unauthorized.statusCode()).isEqualTo(401);
+        assertThat(readMessage(unauthorized.body())).isEqualTo("Authentication is required.");
+
+        String token = adminToken();
+        HttpResponse<String> response = send("POST", "/admin/import/thesportsdb", null, token);
+        assertThat(response.statusCode()).isEqualTo(200);
+
+        JsonNode summary = objectMapper.readTree(response.body());
+        assertThat(summary.path("imported").asInt()).isEqualTo(0);
+        assertThat(summary.path("updated").asInt()).isEqualTo(0);
+        assertThat(summary.path("skipped").asInt()).isEqualTo(0);
+        assertThat(summary.path("errors").asInt()).isEqualTo(0);
+        assertThat(summary.path("note").asText()).contains("disabled");
     }
 
     @Test

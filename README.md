@@ -37,6 +37,11 @@ Main runtime variables:
 - `PORT` (default: `8080`, Render sets it automatically)
 - `JWT_SECRET` (base64 secret for signing JWT)
 - `JWT_ACCESS_EXPIRATION_MS` (default: `86400000`)
+- `THESPORTSDB_ENABLED` (default: `true`)
+- `THESPORTSDB_BASE_URL` (default: `https://www.thesportsdb.com/api/v1/json/123`)
+- `THESPORTSDB_LEAGUE_ID` (default: `4969`)
+- `THESPORTSDB_SYNC_CRON` (default: `0 0 */2 * * *`)
+- `THESPORTSDB_TIMEZONE` (default: `UTC`)
 
 Template file with defaults is available at `.env.example`.
 
@@ -207,6 +212,51 @@ Authorization: Bearer <jwt>
 
 - `POST /admin/news` - create news
 - `PUT /admin/news/{id}` - update news
+
+#### Imports
+
+- `POST /admin/import/thesportsdb` - manual TheSportsDB sync (ADMIN only)
+
+## TheSportsDB Sync
+
+The backend supports scheduled best-effort sync from TheSportsDB for Kyrgyz Premier League (`leagueId=4969`).
+
+- Source endpoints:
+  - `/eventsnextleague.php?id=4969`
+  - `/eventspastleague.php?id=4969`
+  - `/lookupleague.php?id=4969`
+- Matches are upserted by `(external_source='THESPORTSDB', external_id=idEvent)`.
+- Standings are still calculated from our own `matches` table.
+- If a club cannot be matched to an existing local club, that event is skipped and logged.
+- Data quality is best-effort: upstream feed may be incomplete or delayed.
+
+### Configuration
+
+`application.yml` keys (all can be overridden by env vars):
+
+- `thesportsdb.enabled` -> `THESPORTSDB_ENABLED`
+- `thesportsdb.base-url` -> `THESPORTSDB_BASE_URL`
+- `thesportsdb.league-id` -> `THESPORTSDB_LEAGUE_ID`
+- `thesportsdb.sync.cron` -> `THESPORTSDB_SYNC_CRON`
+- `thesportsdb.timezone` -> `THESPORTSDB_TIMEZONE`
+
+### Manual Trigger
+
+1) Get admin token via `POST /auth/login`.
+2) Run import:
+
+```bash
+curl -X POST "http://localhost:8080/admin/import/thesportsdb" \
+  -H "Authorization: Bearer <ADMIN_JWT>" \
+  -H "Accept: application/json"
+```
+
+Response summary:
+
+- `imported` - new matches inserted
+- `updated` - existing external matches updated
+- `skipped` - events skipped (for example unresolved clubs/date)
+- `errors` - network/parsing/processing errors
 
 ## Admin Request Examples
 

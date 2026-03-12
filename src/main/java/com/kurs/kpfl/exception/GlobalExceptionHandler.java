@@ -211,6 +211,9 @@ public class GlobalExceptionHandler {
         if (source.contains("uk_players_club_number")) {
             return "This jersey number is already used in the selected club.";
         }
+        if (source.contains("uk_matches_external_source_external_id")) {
+            return "Match with this external source and external id already exists.";
+        }
         if (source.contains("duplicate")) {
             return "Duplicate value violates a uniqueness constraint.";
         }

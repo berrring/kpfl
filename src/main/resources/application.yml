@@ -32,3 +32,11 @@ management:
 jwt:
   secret: ${JWT_SECRET:bXlfc3VwZXJfc2VjcmV0X2pwX3NpZ25pbmdfa2V5X2Zvcl9rcGZsXzIwMjY=}
   access-token-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:86400000}
+
+thesportsdb:
+  base-url: ${THESPORTSDB_BASE_URL:https://www.thesportsdb.com/api/v1/json/123}
+  league-id: ${THESPORTSDB_LEAGUE_ID:4969}
+  enabled: ${THESPORTSDB_ENABLED:true}
+  timezone: ${THESPORTSDB_TIMEZONE:UTC}
+  sync:
+    cron: "${THESPORTSDB_SYNC_CRON:0 0 */2 * * *}"
