@@ -214,6 +214,36 @@ public class GlobalExceptionHandler {
         if (source.contains("uk_matches_external_source_external_id")) {
             return "Match with this external source and external id already exists.";
         }
+        if (source.contains("uk_fantasy_teams_user_season")) {
+            return "Current user already has a fantasy team for this season.";
+        }
+        if (source.contains("uk_fantasy_team_players_active")) {
+            return "Player is already active in this fantasy squad.";
+        }
+        if (source.contains("uk_fantasy_selections_team_round")) {
+            return "Fantasy lineup for this round already exists.";
+        }
+        if (source.contains("uk_fantasy_lineup_selection_player")) {
+            return "Lineup cannot contain duplicate players.";
+        }
+        if (source.contains("uk_fantasy_prices_player_season")) {
+            return "Fantasy price for this player and season already exists.";
+        }
+        if (source.contains("uk_fantasy_match_stats_player_match")) {
+            return "Fantasy player stats already exist for this player and match.";
+        }
+        if (source.contains("uk_fantasy_round_points_team_round_player")) {
+            return "Fantasy player round points already exist for this team, round, and player.";
+        }
+        if (source.contains("uk_fantasy_round_scores_team_round")) {
+            return "Fantasy round score already exists for this team and round.";
+        }
+        if (source.contains("uk_fantasy_leagues_code")) {
+            return "Fantasy league code already exists.";
+        }
+        if (source.contains("uk_fantasy_league_members")) {
+            return "Fantasy team is already a member of this league.";
+        }
         if (source.contains("duplicate")) {
             return "Duplicate value violates a uniqueness constraint.";
         }

@@ -149,16 +149,27 @@ class EndpointSmokeTest {
     @Test
     void authEndpoints_shouldWorkForRegisterAndLogin() throws Exception {
         String suffix = String.valueOf(System.currentTimeMillis());
+        String email = "user%s@kpfl.local".formatted(suffix);
+        String password = "secret123";
 
         HttpResponse<String> register = send("POST", "/auth/register", """
                 {
                   "email": "user%s@kpfl.local",
                   "password": "secret123",
                   "displayName": "Smoke User %s"
-                }
-                """.formatted(suffix, suffix), null);
+                 }
+                 """.formatted(suffix, suffix), null);
         assertThat(register.statusCode()).isEqualTo(200);
         assertThat(readToken(register.body())).isNotBlank();
+
+        HttpResponse<String> userLogin = send("POST", "/auth/login", """
+                {
+                  "email": "%s",
+                  "password": "%s"
+                }
+                """.formatted(email, password), null);
+        assertThat(userLogin.statusCode()).isEqualTo(200);
+        assertThat(readToken(userLogin.body())).isNotBlank();
 
         HttpResponse<String> login = send("POST", "/auth/login", """
                 {

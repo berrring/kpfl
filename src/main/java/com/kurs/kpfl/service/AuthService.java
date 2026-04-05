@@ -4,8 +4,8 @@ import com.kurs.kpfl.dto.AuthResponse;
 import com.kurs.kpfl.dto.LoginRequest;
 import com.kurs.kpfl.dto.RegisterRequest;
 import com.kurs.kpfl.exception.ConflictException;
-import com.kurs.kpfl.model.Role;
 import com.kurs.kpfl.entity.User;
+import com.kurs.kpfl.model.Role;
 import com.kurs.kpfl.repository.UserRepository;
 import com.kurs.kpfl.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -51,9 +51,6 @@ public class AuthService {
         );
         User user = repository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
-        if (user.getRole() != Role.ADMIN) {
-            throw new BadCredentialsException("Admin access required");
-        }
         var jwtToken = jwtService.generateToken(user);
         return AuthResponse.builder().token(jwtToken).build();
     }
