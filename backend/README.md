@@ -83,7 +83,13 @@ docker run --name kpfl-backend -p 8080:8080 -e SPRING_DATASOURCE_URL=jdbc:postgr
 - Render Dashboard -> `New +` -> `Web Service`
 - Connect repository
 - Environment: `Docker`
-- Render will use `Dockerfile` from project root
+- Set `Root Directory` to `backend`
+- Set `Dockerfile Path` to `./Dockerfile`
+
+If you do not use `Root Directory`, then set:
+
+- `Dockerfile Path` -> `./backend/Dockerfile`
+- `Docker Build Context Directory` -> `./backend`
 
 ### 2) Set health check
 
