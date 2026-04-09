@@ -1,11 +1,9 @@
 package com.kurs.kpfl.controller.admin;
 
-import com.kurs.kpfl.config.OpenApiConfig;
 import com.kurs.kpfl.dto.MatchDetailDto;
 import com.kurs.kpfl.dto.admin.AdminMatchResultRequest;
 import com.kurs.kpfl.dto.admin.AdminMatchUpsertRequest;
 import com.kurs.kpfl.service.admin.AdminMatchService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/admin/matches")
 @RequiredArgsConstructor
-@SecurityRequirement(name = OpenApiConfig.BEARER_AUTH_SCHEME)
 public class AdminMatchController {
 
     private final AdminMatchService adminMatchService;

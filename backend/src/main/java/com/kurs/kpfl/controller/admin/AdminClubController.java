@@ -1,10 +1,8 @@
 package com.kurs.kpfl.controller.admin;
 
-import com.kurs.kpfl.config.OpenApiConfig;
 import com.kurs.kpfl.dto.ClubDetailDto;
 import com.kurs.kpfl.dto.admin.AdminClubUpsertRequest;
 import com.kurs.kpfl.service.admin.AdminClubService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/admin/clubs")
 @RequiredArgsConstructor
-@SecurityRequirement(name = OpenApiConfig.BEARER_AUTH_SCHEME)
 public class AdminClubController {
 
     private final AdminClubService adminClubService;

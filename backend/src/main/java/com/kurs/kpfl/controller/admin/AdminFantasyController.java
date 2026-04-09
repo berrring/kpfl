@@ -1,10 +1,8 @@
 package com.kurs.kpfl.controller.admin;
 
-import com.kurs.kpfl.config.OpenApiConfig;
 import com.kurs.kpfl.dto.admin.AdminFantasyPlayerStatUpsertRequest;
 import com.kurs.kpfl.dto.fantasy.*;
 import com.kurs.kpfl.service.admin.AdminFantasyService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/fantasy")
 @RequiredArgsConstructor
-@SecurityRequirement(name = OpenApiConfig.BEARER_AUTH_SCHEME)
 public class AdminFantasyController {
 
     private final AdminFantasyService adminFantasyService;
