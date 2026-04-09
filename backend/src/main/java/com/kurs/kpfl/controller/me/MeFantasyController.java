@@ -1,9 +1,11 @@
 package com.kurs.kpfl.controller.me;
 
+import com.kurs.kpfl.config.OpenApiConfig;
 import com.kurs.kpfl.dto.fantasy.*;
 import com.kurs.kpfl.entity.User;
 import com.kurs.kpfl.service.fantasy.FantasyLeagueService;
 import com.kurs.kpfl.service.fantasy.FantasyTeamService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/me/fantasy")
 @RequiredArgsConstructor
+@SecurityRequirement(name = OpenApiConfig.BEARER_AUTH_SCHEME)
 public class MeFantasyController {
 
     private final FantasyTeamService fantasyTeamService;

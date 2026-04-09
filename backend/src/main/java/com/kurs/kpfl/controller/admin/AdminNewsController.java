@@ -1,8 +1,10 @@
 package com.kurs.kpfl.controller.admin;
 
+import com.kurs.kpfl.config.OpenApiConfig;
 import com.kurs.kpfl.dto.NewsDetailDto;
 import com.kurs.kpfl.dto.admin.AdminNewsUpsertRequest;
 import com.kurs.kpfl.service.admin.AdminNewsService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/admin/news")
 @RequiredArgsConstructor
+@SecurityRequirement(name = OpenApiConfig.BEARER_AUTH_SCHEME)
 public class AdminNewsController {
 
     private final AdminNewsService adminNewsService;
