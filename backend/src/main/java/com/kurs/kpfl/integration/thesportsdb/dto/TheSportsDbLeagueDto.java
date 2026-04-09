@@ -9,4 +9,5 @@ public class TheSportsDbLeagueDto {
     private String idLeague;
     private String strLeague;
     private String strBadge;
+    private String strCurrentSeason;
 }

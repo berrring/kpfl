@@ -8,7 +8,9 @@ import lombok.Data;
 public class TheSportsDbEventDto {
     private String idEvent;
     private String dateEvent;
+    private String dateEventLocal;
     private String strTime;
+    private String strTimeLocal;
     private String strTimestamp;
     private String strHomeTeam;
     private String strAwayTeam;

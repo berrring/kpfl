@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TheSportsDbClient {
+    List<TheSportsDbEventDto> fetchSeasonEvents(String season);
     List<TheSportsDbEventDto> fetchNextLeagueEvents();
     List<TheSportsDbEventDto> fetchPastLeagueEvents();
     Optional<TheSportsDbLeagueDto> fetchLeague();

@@ -18,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TheSportsDbHttpClient implements TheSportsDbClient {
 
+    private static final String SEASON_EVENTS_ENDPOINT = "/eventsseason.php";
     private static final String NEXT_EVENTS_ENDPOINT = "/eventsnextleague.php";
     private static final String PAST_EVENTS_ENDPOINT = "/eventspastleague.php";
     private static final String LOOKUP_LEAGUE_ENDPOINT = "/lookupleague.php";
@@ -26,13 +27,26 @@ public class TheSportsDbHttpClient implements TheSportsDbClient {
     private final TheSportsDbProperties properties;
 
     @Override
+    public List<TheSportsDbEventDto> fetchSeasonEvents(String season) {
+        if (season == null || season.isBlank()) {
+            return Collections.emptyList();
+        }
+        String url = UriComponentsBuilder.fromUriString(properties.getBaseUrl())
+                .path(SEASON_EVENTS_ENDPOINT)
+                .queryParam("id", properties.getLeagueId())
+                .queryParam("s", season)
+                .toUriString();
+        return fetchEvents(url);
+    }
+
+    @Override
     public List<TheSportsDbEventDto> fetchNextLeagueEvents() {
-        return fetchEvents(NEXT_EVENTS_ENDPOINT);
+        return fetchEvents(buildLeagueUrl(NEXT_EVENTS_ENDPOINT));
     }
 
     @Override
     public List<TheSportsDbEventDto> fetchPastLeagueEvents() {
-        return fetchEvents(PAST_EVENTS_ENDPOINT);
+        return fetchEvents(buildLeagueUrl(PAST_EVENTS_ENDPOINT));
     }
 
     @Override
@@ -45,8 +59,7 @@ public class TheSportsDbHttpClient implements TheSportsDbClient {
         return Optional.ofNullable(response.getLeagues().getFirst());
     }
 
-    private List<TheSportsDbEventDto> fetchEvents(String endpoint) {
-        String url = buildLeagueUrl(endpoint);
+    private List<TheSportsDbEventDto> fetchEvents(String url) {
         TheSportsDbEventsResponse response = theSportsDbRestTemplate.getForObject(url, TheSportsDbEventsResponse.class);
         if (response == null || response.getEvents() == null) {
             return Collections.emptyList();

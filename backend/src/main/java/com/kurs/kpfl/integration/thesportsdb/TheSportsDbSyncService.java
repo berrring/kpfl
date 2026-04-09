@@ -6,6 +6,7 @@ import com.kurs.kpfl.entity.Match;
 import com.kurs.kpfl.entity.Season;
 import com.kurs.kpfl.integration.thesportsdb.client.TheSportsDbClient;
 import com.kurs.kpfl.integration.thesportsdb.dto.TheSportsDbEventDto;
+import com.kurs.kpfl.integration.thesportsdb.dto.TheSportsDbLeagueDto;
 import com.kurs.kpfl.model.MatchStatus;
 import com.kurs.kpfl.repository.ClubRepository;
 import com.kurs.kpfl.repository.MatchRepository;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,11 +70,18 @@ public class TheSportsDbSyncService {
     public TheSportsDbSyncSummary sync() {
         SyncStats stats = new SyncStats();
         ZoneId zoneId = resolveZoneId();
+        Optional<TheSportsDbLeagueDto> league = fetchLeagueMetadataSafely(stats);
 
         List<TheSportsDbEventDto> rawEvents = new ArrayList<>();
+        resolveSeasonToFetch(league, zoneId).ifPresent(season ->
+                rawEvents.addAll(fetchEventsSafely(
+                        "season " + season,
+                        () -> theSportsDbClient.fetchSeasonEvents(season),
+                        stats
+                ))
+        );
         rawEvents.addAll(fetchEventsSafely("past", theSportsDbClient::fetchPastLeagueEvents, stats));
         rawEvents.addAll(fetchEventsSafely("next", theSportsDbClient::fetchNextLeagueEvents, stats));
-        fetchLeagueMetadataSafely(stats);
 
         Map<String, TheSportsDbEventDto> dedupedEvents = deduplicate(rawEvents, stats);
         if (dedupedEvents.isEmpty() && stats.errors == 0) {
@@ -248,24 +257,43 @@ public class TheSportsDbSyncService {
         }
     }
 
-    private void fetchLeagueMetadataSafely(SyncStats stats) {
+    private Optional<TheSportsDbLeagueDto> fetchLeagueMetadataSafely(SyncStats stats) {
         try {
-            theSportsDbClient.fetchLeague().ifPresent(league -> log.info(
-                    "TheSportsDB league metadata: id={}, name='{}', badge='{}'",
-                    league.getIdLeague(), league.getStrLeague(), league.getStrBadge()
+            Optional<TheSportsDbLeagueDto> league = theSportsDbClient.fetchLeague();
+            league.ifPresent(item -> log.info(
+                    "TheSportsDB league metadata: id={}, name='{}', badge='{}', currentSeason='{}'",
+                    item.getIdLeague(), item.getStrLeague(), item.getStrBadge(), item.getStrCurrentSeason()
             ));
+            return league;
         } catch (Exception ex) {
             stats.errors++;
             log.error("Failed to fetch league metadata from TheSportsDB: {}", ex.getMessage(), ex);
+            return Optional.empty();
         }
     }
 
     private LocalDateTime resolveKickoffDateTime(TheSportsDbEventDto event, ZoneId zoneId) {
+        LocalDateTime localDateTime = parseDateAndTime(event.getDateEventLocal(), event.getStrTimeLocal());
+        if (localDateTime != null) {
+            return localDateTime;
+        }
+
         LocalDateTime parsedTimestamp = parseTimestamp(event.getStrTimestamp(), zoneId);
         if (parsedTimestamp != null) {
             return parsedTimestamp;
         }
         return parseDateAndTime(event.getDateEvent(), event.getStrTime());
+    }
+
+    private Optional<String> resolveSeasonToFetch(Optional<TheSportsDbLeagueDto> league, ZoneId zoneId) {
+        String currentSeason = league
+                .map(TheSportsDbLeagueDto::getStrCurrentSeason)
+                .map(this::trimToNull)
+                .orElse(null);
+        if (currentSeason != null) {
+            return Optional.of(currentSeason);
+        }
+        return Optional.of(String.valueOf(LocalDate.now(zoneId).getYear()));
     }
 
     private LocalDateTime parseTimestamp(String rawTimestamp, ZoneId zoneId) {

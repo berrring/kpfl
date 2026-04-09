@@ -6,6 +6,7 @@ import com.kurs.kpfl.entity.Match;
 import com.kurs.kpfl.entity.Season;
 import com.kurs.kpfl.integration.thesportsdb.client.TheSportsDbClient;
 import com.kurs.kpfl.integration.thesportsdb.dto.TheSportsDbEventDto;
+import com.kurs.kpfl.integration.thesportsdb.dto.TheSportsDbLeagueDto;
 import com.kurs.kpfl.model.MatchStatus;
 import com.kurs.kpfl.repository.ClubRepository;
 import com.kurs.kpfl.repository.MatchRepository;
@@ -63,10 +64,12 @@ class TheSportsDbSyncServiceTest {
         Season season = Season.builder().id(1L).year(2026).name("KPFL 2026").build();
 
         TheSportsDbEventDto duplicateEvent = scheduledEvent("900001");
+        TheSportsDbLeagueDto league = league("2026");
 
+        when(theSportsDbClient.fetchSeasonEvents("2026")).thenReturn(List.of(duplicateEvent));
         when(theSportsDbClient.fetchPastLeagueEvents()).thenReturn(List.of(duplicateEvent));
         when(theSportsDbClient.fetchNextLeagueEvents()).thenReturn(List.of(duplicateEvent));
-        when(theSportsDbClient.fetchLeague()).thenReturn(Optional.empty());
+        when(theSportsDbClient.fetchLeague()).thenReturn(Optional.of(league));
 
         when(clubRepository.findAll()).thenReturn(List.of(home, away));
         when(seasonRepository.findByYear(2026)).thenReturn(Optional.of(season));
@@ -108,10 +111,12 @@ class TheSportsDbSyncServiceTest {
                 .build();
 
         TheSportsDbEventDto event = finishedEvent("900002");
+        TheSportsDbLeagueDto league = league("2026");
 
+        when(theSportsDbClient.fetchSeasonEvents("2026")).thenReturn(List.of(event));
         when(theSportsDbClient.fetchPastLeagueEvents()).thenReturn(List.of(event));
         when(theSportsDbClient.fetchNextLeagueEvents()).thenReturn(List.of());
-        when(theSportsDbClient.fetchLeague()).thenReturn(Optional.empty());
+        when(theSportsDbClient.fetchLeague()).thenReturn(Optional.of(league));
 
         when(clubRepository.findAll()).thenReturn(List.of(home, away));
         when(seasonRepository.findByYear(2026)).thenReturn(Optional.of(season));
@@ -137,13 +142,17 @@ class TheSportsDbSyncServiceTest {
         assertThat(saved.getHomeScore()).isEqualTo(2);
         assertThat(saved.getAwayScore()).isEqualTo(1);
         assertThat(saved.getRound()).isEqualTo(3);
+        assertThat(saved.getDateTime()).isEqualTo(LocalDateTime.parse("2026-03-12T21:00:00"));
     }
 
     private TheSportsDbEventDto scheduledEvent(String idEvent) {
         TheSportsDbEventDto event = new TheSportsDbEventDto();
         event.setIdEvent(idEvent);
         event.setDateEvent("2026-03-12");
+        event.setDateEventLocal("2026-03-12");
         event.setStrTime("18:00:00");
+        event.setStrTimeLocal("21:00:00");
+        event.setStrTimestamp("2026-03-12T18:00:00");
         event.setStrHomeTeam("Dordoi Bishkek");
         event.setStrAwayTeam("Alga Bishkek");
         event.setStrVenue("Dolen Omurzakov");
@@ -156,5 +165,13 @@ class TheSportsDbSyncServiceTest {
         event.setIntHomeScore(2);
         event.setIntAwayScore(1);
         return event;
+    }
+
+    private TheSportsDbLeagueDto league(String currentSeason) {
+        TheSportsDbLeagueDto league = new TheSportsDbLeagueDto();
+        league.setIdLeague("4969");
+        league.setStrLeague("Kyrgyz Premier League");
+        league.setStrCurrentSeason(currentSeason);
+        return league;
     }
 }
