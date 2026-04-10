@@ -55,13 +55,39 @@ The production build succeeds.
 
 ### iOS User App
 
-Implemented:
-- Native SwiftUI architecture with modern UI
-- User authentication and profile management
-- Live match tracking and standings
-- News feed and detailed articles
-- Comprehensive Fantasy Football (squad building, transfers, leagues)
-- Integration with Spring Boot backend
+A high-performance, native iOS application providing a premium experience for Kyrgyz Premier League fans. Built with modern Apple technologies and a focus on real-time data and interactive features.
+
+#### Key Features:
+- **Comprehensive Fantasy Football:** 
+    - Full squad management (15 players: 2GK, 5DF, 5MF, 3FW)
+    - Real-time transfer market with price fluctuations
+    - Private and Public leagues with live leaderboards
+    - Gameweek-by-gameweek performance tracking and point history
+    - Interactive pitch view for lineup management
+- **Real-Time Match Center:**
+    - Live match tracking, scores, and detailed event timelines
+    - Interactive standings and league tables
+    - Full match history and upcoming fixtures
+- **Rich Content & Profiles:**
+    - News feed with high-quality images and detailed articles
+    - Detailed Player Profiles with season stats and career history
+    - Club Profiles including squad lists, honors, and stadium info
+- **Seamless Integration:**
+    - Secure JWT-based authentication
+    - Optimized API client with robust error handling and data mapping
+    - Local data persistence and efficient caching
+
+#### Technical Stack:
+- **UI:** SwiftUI for a reactive and modern user interface
+- **Architecture:** MVVM (Model-View-ViewModel) for clean separation of concerns
+- **Concurrency:** Swift Concurrency (async/await) for smooth networking
+- **Networking:** Generic API client over URLSession with DTO mapping
+- **Tools:** Xcode, Asset Catalogs, Custom UI Components
+
+## Contributors
+
+- **Ayaz (@ayzsw)** — Lead iOS Developer (SwiftUI, Architecture, Fantasy Module)
+- **@berrring** — Backend & Admin Panel Developer (Spring Boot, React)
 
 ## Quick Start
 
@@ -304,4 +330,3 @@ Admin:
 - backend details: `backend/README.md`
 - admin frontend details: `frontend-admin/README.md`
 - iOS draft: `ios-user-application/README.md`
-\n\n## Project Team\n\n- **Backend & Admin:** berrring\n- **iOS App:** ayzsw\n
