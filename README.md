@@ -4,7 +4,7 @@ KPFL is a monorepo for a Kyrgyz Premier League platform. Right now the repositor
 
 - a Spring Boot backend
 - a React/Vite admin panel
-- a placeholder iOS folder with a rough Swift app plan
+- a fully functional native iOS application
 
 The project already covers public football data, admin CRUD flows, fantasy football backend logic, seed/demo data, and TheSportsDB synchronization.
 
@@ -12,7 +12,7 @@ The project already covers public football data, admin CRUD flows, fantasy footb
 
 - `backend` - Spring Boot API, auth, admin endpoints, fantasy logic, Flyway migrations
 - `frontend-admin` - React 19 + Vite admin panel for clubs, players, matches, news, and fantasy operations
-- `ios-user-application` - planned native iOS user app, currently documentation only
+- `ios-user-application` - native iOS user app built with SwiftUI
 - `render.yaml` - Render deployment blueprint for the backend
 
 ## Current Status
@@ -55,7 +55,13 @@ The production build succeeds.
 
 ### iOS User App
 
-Not implemented yet. The folder currently contains a Swift-oriented product/architecture draft so the app can be started without redefining the API contract from zero.
+Implemented:
+- Native SwiftUI architecture with modern UI
+- User authentication and profile management
+- Live match tracking and standings
+- News feed and detailed articles
+- Comprehensive Fantasy Football (squad building, transfers, leagues)
+- Integration with Spring Boot backend
 
 ## Quick Start
 
@@ -279,7 +285,6 @@ Admin:
 
 ## Known Gaps
 
-- iOS app is not implemented yet
 - admin panel currently focuses on create/update workflows; destructive flows are still limited
 - fantasy content is demo-seeded, not editor-managed end-to-end yet
 - TheSportsDB data quality depends on upstream naming and scheduling consistency
@@ -288,7 +293,7 @@ Admin:
 
 ## Suggested Next Steps
 
-- add the first real SwiftUI iOS client skeleton
+- enhance iOS app features and UI
 - add CI for backend compile/tests and frontend-admin build
 - add stronger admin docs for fantasy operations
 - add delete/archive flows where business rules allow them
@@ -299,3 +304,4 @@ Admin:
 - backend details: `backend/README.md`
 - admin frontend details: `frontend-admin/README.md`
 - iOS draft: `ios-user-application/README.md`
+\n\n## Project Team\n\n- **Backend & Admin:** berrring\n- **iOS App:** ayzsw\n
