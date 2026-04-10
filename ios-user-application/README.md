@@ -1,119 +1,64 @@
-# iOS User Application
+# KPFL iOS App
 
-This folder does not contain a real iOS app yet.
+KPFL is an iOS app for Kyrgyz Premier League content:
+- matches and standings
+- clubs and players
+- news and stats
+- fantasy league (team, squad, gameweek, leagues)
 
-It exists to reserve the module and define the intended Swift direction for the user-facing mobile client.
+## Tech Stack
 
-## Intended Stack
-
-- Swift 5.10+
+- Swift
 - SwiftUI
-- async/await networking
-- `URLSession` for API access
-- lightweight token storage via Keychain
-- optional local caching for read-heavy screens
+- Xcode project: `KPFL.xcodeproj`
+- Backend API: `https://kpfl.onrender.com`
 
-## Intended Product Scope
+## Features
 
-The iOS app should be a user-facing client, not an admin tool.
+- Authentication: register/login
+- Home dashboard with latest league data
+- Matches with filters
+- Standings table
+- Club profile / player profile
+- News feed + detail
+- Fantasy:
+  - create fantasy team
+  - build and update squad
+  - gameweek view
+  - league leaderboard
+  - join league / create league
+- App settings:
+  - theme mode: `System / Light / Dark`
 
-Expected first-version features:
+## Project Structure
 
-- authentication
-- clubs list and club details
-- players list and player details
-- matches list and match details
-- standings
-- news feed
-- fantasy team management
-- fantasy lineup and transfer flows
-- fantasy leaderboard
+- `KPFL/` - app entry files (`KPFLApp`, `ContentView`, `AppSettings`)
+- `Sreens/` - all screens and feature UI
+- `Sreens/Fantasy/` - fantasy module (`Models`, `ViewModels`, `Views`, `Services`)
+- `Network/` - API layer and DTOs
+- `Views/` - reusable UI components
+- `KPFL.xcodeproj/` - Xcode project config
 
-## Suggested App Structure
+## Run Locally
 
-One reasonable starting point:
+1. Open `KPFL.xcodeproj` in Xcode.
+2. Select scheme `KPFL`.
+3. Set your signing team in:
+   `TARGETS -> KPFL -> Signing & Capabilities`.
+4. Build and run on simulator or device.
 
-- `App/`
-  - app entry point
-  - root navigation
-  - dependency container
-- `Features/Auth/`
-- `Features/Clubs/`
-- `Features/Players/`
-- `Features/Matches/`
-- `Features/News/`
-- `Features/Fantasy/`
-- `Networking/`
-  - API client
-  - request builders
-  - auth interceptor
-- `Models/`
-- `Storage/`
-  - token storage
-  - optional simple cache
-- `DesignSystem/`
+## API Notes
 
-## Backend Endpoints To Use
+- Public endpoints are used for league content (`/api/*`).
+- Authorized fantasy endpoints use Bearer token (`/me/fantasy/*`).
+- Token is stored locally after login/register.
 
-Public API:
+## Known Notes for Demo
 
-- `GET /api/clubs`
-- `GET /api/clubs/{id}`
-- `GET /api/players`
-- `GET /api/players/{id}`
-- `GET /api/matches`
-- `GET /api/matches/{id}`
-- `GET /api/news`
-- `GET /api/news/{id}`
-- `GET /api/standings`
-- `GET /api/history/**`
-- `GET /api/fantasy/leaderboard`
-- `GET /api/fantasy/rounds/current`
+- If backend is temporarily unavailable, fantasy player selection uses local fallback data.
+- Some backend operations require authenticated user state.
 
-Authenticated user API:
+## Version
 
-- `POST /auth/login`
-- `GET /me/fantasy/team`
-- `GET /me/fantasy/team/squad`
-- `PUT /me/fantasy/team/lineup`
-- `POST /me/fantasy/team/transfers`
-- `GET /me/fantasy/team/history`
-- `GET /me/fantasy/leagues`
-- `POST /me/fantasy/leagues`
-- `POST /me/fantasy/leagues/join`
+- Current app version in UI: `1.0.0`
 
-## Suggested First Milestone
-
-Build a minimal SwiftUI shell with:
-
-- login screen
-- tab navigation
-- clubs screen
-- matches screen
-- news screen
-- fantasy screen
-
-That gives enough surface area to validate:
-
-- auth flow
-- API models
-- token persistence
-- navigation style
-- loading and error states
-
-## Practical Notes
-
-- backend JWT is already available through `POST /auth/login`
-- demo fantasy users are already seeded in the backend database
-- the app should treat admin endpoints as out of scope
-- if the app targets App Store distribution later, API base URLs should be environment-specific
-
-## What Is Missing Today
-
-- no Xcode project
-- no Swift package/module layout
-- no networking layer yet
-- no design system yet
-- no push notification or offline strategy yet
-
-This file is intentionally a rough implementation guide so the Swift app can be started cleanly later.
